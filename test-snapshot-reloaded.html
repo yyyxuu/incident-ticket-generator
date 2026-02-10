@@ -1,0 +1,408 @@
+uid=5_0 RootWebArea "事故工单生成器" url="http://localhost:8080/"
+  uid=5_1 ignored
+    uid=5_2 ignored
+      uid=5_3 banner
+        uid=5_4 heading "事故工单生成器" level="1"
+          uid=5_5 StaticText "事故工单生成器"
+            uid=5_6 InlineTextBox "事故工单生成器"
+        uid=5_7 paragraph
+          uid=5_8 StaticText "填写事故信息，自动生成PDF工单"
+            uid=5_6 InlineTextBox "填写事故信息，自动生成PDF工单"
+      uid=5_9 main
+        uid=5_10 generic
+          uid=5_11 ignored
+            uid=5_12 heading "一、事故详情" level="2"
+              uid=5_13 StaticText "一、事故详情"
+                uid=5_6 InlineTextBox "一、事故详情"
+            uid=5_14 ignored
+              uid=5_15 LabelText
+                uid=5_16 StaticText "事故类型"
+                  uid=5_6 InlineTextBox "事故类型"
+              uid=5_17 generic
+                uid=5_18 ignored
+                  uid=5_19 checkbox "系统故障"
+                  uid=5_20 ignored
+                    uid=5_21 ignored
+                uid=5_22 ignored
+                  uid=5_23 checkbox "网络中断"
+                  uid=5_24 ignored
+                    uid=5_25 ignored
+                uid=5_26 ignored
+                  uid=5_27 checkbox "安全事件"
+                  uid=5_28 ignored
+                    uid=5_29 ignored
+                uid=5_30 ignored
+                  uid=5_31 checkbox "设备损坏"
+                  uid=5_32 ignored
+                    uid=5_33 ignored
+                uid=5_34 ignored
+                  uid=5_35 checkbox "其他"
+                  uid=5_36 ignored
+                    uid=5_37 ignored
+              uid=5_38 ignored
+              uid=5_39 ignored
+            uid=5_40 ignored
+              uid=5_41 LabelText
+                uid=5_42 StaticText "发生时间"
+                  uid=5_6 InlineTextBox "发生时间"
+              uid=5_43 DateTime "发生时间"
+                uid=5_44 ignored
+                  uid=5_45 generic
+                    uid=5_46 generic
+                      uid=5_47 spinbutton "年 年" value="0" valuemax="275760" valuemin="1" valuetext=""
+                        uid=5_48 StaticText " 年 "
+                          uid=5_6 InlineTextBox " 年 "
+                      uid=5_49 StaticText "/"
+                        uid=5_6 InlineTextBox "/"
+                      uid=5_50 spinbutton "月 月" value="0" valuemax="12" valuemin="1" valuetext=""
+                        uid=5_51 StaticText "月"
+                          uid=5_6 InlineTextBox "月"
+                      uid=5_52 StaticText "/"
+                        uid=5_6 InlineTextBox "/"
+                      uid=5_53 spinbutton "日 日" value="0" valuemax="31" valuemin="1" valuetext=""
+                        uid=5_54 StaticText "日"
+                          uid=5_6 InlineTextBox "日"
+                      uid=5_55 StaticText " "
+                        uid=5_6 InlineTextBox " "
+                      uid=5_56 spinbutton "小时 小时" value="0" valuemax="23" valuemin="0" valuetext=""
+                        uid=5_57 StaticText "--"
+                          uid=5_6 InlineTextBox "--"
+                      uid=5_58 StaticText ":"
+                        uid=5_6 InlineTextBox ":"
+                      uid=5_59 spinbutton "分钟 分钟" value="0" valuemax="59" valuemin="0" valuetext=""
+                        uid=5_60 StaticText "--"
+                          uid=5_6 InlineTextBox "--"
+                  uid=5_61 button "显示当地日期和时间选择器" haspopup="menu"
+            uid=5_62 ignored
+              uid=5_63 LabelText
+                uid=5_64 StaticText "发现时间"
+                  uid=5_6 InlineTextBox "发现时间"
+              uid=5_65 DateTime "发现时间"
+                uid=5_66 ignored
+                  uid=5_67 generic
+                    uid=5_68 generic
+                      uid=5_69 spinbutton "年 年" value="0" valuemax="275760" valuemin="1" valuetext=""
+                        uid=5_70 StaticText " 年 "
+                          uid=5_6 InlineTextBox " 年 "
+                      uid=5_71 StaticText "/"
+                        uid=5_6 InlineTextBox "/"
+                      uid=5_72 spinbutton "月 月" value="0" valuemax="12" valuemin="1" valuetext=""
+                        uid=5_73 StaticText "月"
+                          uid=5_6 InlineTextBox "月"
+                      uid=5_74 StaticText "/"
+                        uid=5_6 InlineTextBox "/"
+                      uid=5_75 spinbutton "日 日" value="0" valuemax="31" valuemin="1" valuetext=""
+                        uid=5_76 StaticText "日"
+                          uid=5_6 InlineTextBox "日"
+                      uid=5_77 StaticText " "
+                        uid=5_6 InlineTextBox " "
+                      uid=5_78 spinbutton "小时 小时" value="0" valuemax="23" valuemin="0" valuetext=""
+                        uid=5_79 StaticText "--"
+                          uid=5_6 InlineTextBox "--"
+                      uid=5_80 StaticText ":"
+                        uid=5_6 InlineTextBox ":"
+                      uid=5_81 spinbutton "分钟 分钟" value="0" valuemax="59" valuemin="0" valuetext=""
+                        uid=5_82 StaticText "--"
+                          uid=5_6 InlineTextBox "--"
+                  uid=5_83 button "显示当地日期和时间选择器" haspopup="menu"
+            uid=5_84 ignored
+              uid=5_85 LabelText
+                uid=5_86 StaticText "发生地点/系统"
+                  uid=5_6 InlineTextBox "发生地点/系统"
+              uid=5_87 textbox "发生地点/系统"
+                uid=5_88 ignored
+                uid=5_89 generic
+            uid=5_90 ignored
+              uid=5_91 LabelText
+                uid=5_92 StaticText "影响范围"
+                  uid=5_6 InlineTextBox "影响范围"
+              uid=5_93 textbox "影响范围"
+                uid=5_94 ignored
+                uid=5_95 generic
+            uid=5_96 ignored
+              uid=5_97 LabelText
+                uid=5_98 StaticText "事故描述"
+                  uid=5_6 InlineTextBox "事故描述"
+              uid=5_99 textbox "事故描述" multiline
+                uid=5_100 ignored
+                uid=5_101 generic
+          uid=5_102 ignored
+            uid=5_103 heading "二、处理过程" level="2"
+              uid=5_104 StaticText "二、处理过程"
+                uid=5_6 InlineTextBox "二、处理过程"
+            uid=5_105 table
+              uid=5_106 rowgroup
+                uid=5_107 row
+                  uid=5_108 columnheader "时间"
+                    uid=5_109 StaticText "时间"
+                      uid=5_6 InlineTextBox "时间"
+                  uid=5_110 columnheader "操作内容"
+                    uid=5_111 StaticText "操作内容"
+                      uid=5_6 InlineTextBox "操作内容"
+                  uid=5_112 columnheader "状态更新"
+                    uid=5_113 StaticText "状态更新"
+                      uid=5_6 InlineTextBox "状态更新"
+                  uid=5_114 columnheader "操作"
+                    uid=5_115 StaticText "操作"
+                      uid=5_6 InlineTextBox "操作"
+              uid=5_116 rowgroup
+                uid=5_117 row
+                  uid=5_118 cell
+                    uid=5_119 DateTime
+                      uid=5_120 ignored
+                        uid=5_121 generic
+                          uid=5_122 generic
+                            uid=5_123 spinbutton "年" value="0" valuemax="275760" valuemin="1" valuetext=""
+                              uid=5_124 StaticText " 年 "
+                                uid=5_6 InlineTextBox " 年 "
+                            uid=5_125 StaticText "/"
+                              uid=5_6 InlineTextBox "/"
+                            uid=5_126 spinbutton "月" value="0" valuemax="12" valuemin="1" valuetext=""
+                              uid=5_127 StaticText "月"
+                                uid=5_6 InlineTextBox "月"
+                            uid=5_128 StaticText "/"
+                              uid=5_6 InlineTextBox "/"
+                            uid=5_129 spinbutton "日" value="0" valuemax="31" valuemin="1" valuetext=""
+                              uid=5_130 StaticText "日"
+                                uid=5_6 InlineTextBox "日"
+                            uid=5_131 StaticText " "
+                              uid=5_6 InlineTextBox " "
+                            uid=5_132 spinbutton "小时" value="0" valuemax="23" valuemin="0" valuetext=""
+                              uid=5_133 StaticText "--"
+                                uid=5_6 InlineTextBox "--"
+                            uid=5_134 StaticText ":"
+                              uid=5_6 InlineTextBox ":"
+                            uid=5_135 spinbutton "分钟" value="0" valuemax="59" valuemin="0" valuetext=""
+                              uid=5_136 StaticText "--"
+                                uid=5_6 InlineTextBox "--"
+                        uid=5_137 button "显示当地日期和时间选择器" haspopup="menu"
+                  uid=5_138 cell "操作内容"
+                    uid=5_139 textbox "操作内容"
+                      uid=5_140 ignored
+                      uid=5_141 generic
+                  uid=5_142 cell "状态"
+                    uid=5_143 textbox "状态"
+                      uid=5_144 ignored
+                      uid=5_145 generic
+                  uid=5_146 cell
+                uid=5_147 row
+                  uid=5_148 cell
+                    uid=5_149 DateTime
+                      uid=5_150 ignored
+                        uid=5_151 generic
+                          uid=5_152 generic
+                            uid=5_153 spinbutton "年" value="0" valuemax="275760" valuemin="1" valuetext=""
+                              uid=5_154 StaticText " 年 "
+                                uid=5_6 InlineTextBox " 年 "
+                            uid=5_155 StaticText "/"
+                              uid=5_6 InlineTextBox "/"
+                            uid=5_156 spinbutton "月" value="0" valuemax="12" valuemin="1" valuetext=""
+                              uid=5_157 StaticText "月"
+                                uid=5_6 InlineTextBox "月"
+                            uid=5_158 StaticText "/"
+                              uid=5_6 InlineTextBox "/"
+                            uid=5_159 spinbutton "日" value="0" valuemax="31" valuemin="1" valuetext=""
+                              uid=5_160 StaticText "日"
+                                uid=5_6 InlineTextBox "日"
+                            uid=5_161 StaticText " "
+                              uid=5_6 InlineTextBox " "
+                            uid=5_162 spinbutton "小时" value="0" valuemax="23" valuemin="0" valuetext=""
+                              uid=5_163 StaticText "--"
+                                uid=5_6 InlineTextBox "--"
+                            uid=5_164 StaticText ":"
+                              uid=5_6 InlineTextBox ":"
+                            uid=5_165 spinbutton "分钟" value="0" valuemax="59" valuemin="0" valuetext=""
+                              uid=5_166 StaticText "--"
+                                uid=5_6 InlineTextBox "--"
+                        uid=5_167 button "显示当地日期和时间选择器" haspopup="menu"
+                  uid=5_168 cell "操作内容"
+                    uid=5_169 textbox "操作内容"
+                      uid=5_170 ignored
+                      uid=5_171 generic
+                  uid=5_172 cell "状态"
+                    uid=5_173 textbox "状态"
+                      uid=5_174 ignored
+                      uid=5_175 generic
+                  uid=5_176 cell
+                uid=5_177 row
+                  uid=5_178 cell
+                    uid=5_179 DateTime
+                      uid=5_180 ignored
+                        uid=5_181 generic
+                          uid=5_182 generic
+                            uid=5_183 spinbutton "年" value="0" valuemax="275760" valuemin="1" valuetext=""
+                              uid=5_184 StaticText " 年 "
+                                uid=5_6 InlineTextBox " 年 "
+                            uid=5_185 StaticText "/"
+                              uid=5_6 InlineTextBox "/"
+                            uid=5_186 spinbutton "月" value="0" valuemax="12" valuemin="1" valuetext=""
+                              uid=5_187 StaticText "月"
+                                uid=5_6 InlineTextBox "月"
+                            uid=5_188 StaticText "/"
+                              uid=5_6 InlineTextBox "/"
+                            uid=5_189 spinbutton "日" value="0" valuemax="31" valuemin="1" valuetext=""
+                              uid=5_190 StaticText "日"
+                                uid=5_6 InlineTextBox "日"
+                            uid=5_191 StaticText " "
+                              uid=5_6 InlineTextBox " "
+                            uid=5_192 spinbutton "小时" value="0" valuemax="23" valuemin="0" valuetext=""
+                              uid=5_193 StaticText "--"
+                                uid=5_6 InlineTextBox "--"
+                            uid=5_194 StaticText ":"
+                              uid=5_6 InlineTextBox ":"
+                            uid=5_195 spinbutton "分钟" value="0" valuemax="59" valuemin="0" valuetext=""
+                              uid=5_196 StaticText "--"
+                                uid=5_6 InlineTextBox "--"
+                        uid=5_197 button "显示当地日期和时间选择器" haspopup="menu"
+                  uid=5_198 cell "操作内容"
+                    uid=5_199 textbox "操作内容"
+                      uid=5_200 ignored
+                      uid=5_201 generic
+                  uid=5_202 cell "状态"
+                    uid=5_203 textbox "状态"
+                      uid=5_204 ignored
+                      uid=5_205 generic
+                  uid=5_206 cell
+                uid=5_207 row
+                  uid=5_208 cell
+                    uid=5_209 DateTime
+                      uid=5_210 ignored
+                        uid=5_211 generic
+                          uid=5_212 generic
+                            uid=5_213 spinbutton "年" value="0" valuemax="275760" valuemin="1" valuetext=""
+                              uid=5_214 StaticText " 年 "
+                                uid=5_6 InlineTextBox " 年 "
+                            uid=5_215 StaticText "/"
+                              uid=5_6 InlineTextBox "/"
+                            uid=5_216 spinbutton "月" value="0" valuemax="12" valuemin="1" valuetext=""
+                              uid=5_217 StaticText "月"
+                                uid=5_6 InlineTextBox "月"
+                            uid=5_218 StaticText "/"
+                              uid=5_6 InlineTextBox "/"
+                            uid=5_219 spinbutton "日" value="0" valuemax="31" valuemin="1" valuetext=""
+                              uid=5_220 StaticText "日"
+                                uid=5_6 InlineTextBox "日"
+                            uid=5_221 StaticText " "
+                              uid=5_6 InlineTextBox " "
+                            uid=5_222 spinbutton "小时" value="0" valuemax="23" valuemin="0" valuetext=""
+                              uid=5_223 StaticText "--"
+                                uid=5_6 InlineTextBox "--"
+                            uid=5_224 StaticText ":"
+                              uid=5_6 InlineTextBox ":"
+                            uid=5_225 spinbutton "分钟" value="0" valuemax="59" valuemin="0" valuetext=""
+                              uid=5_226 StaticText "--"
+                                uid=5_6 InlineTextBox "--"
+                        uid=5_227 button "显示当地日期和时间选择器" haspopup="menu"
+                  uid=5_228 cell "操作内容"
+                    uid=5_229 textbox "操作内容"
+                      uid=5_230 ignored
+                      uid=5_231 generic
+                  uid=5_232 cell "状态"
+                    uid=5_233 textbox "状态"
+                      uid=5_234 ignored
+                      uid=5_235 generic
+                  uid=5_236 cell
+                uid=5_237 row
+                  uid=5_238 cell
+                    uid=5_239 DateTime
+                      uid=5_240 ignored
+                        uid=5_241 generic
+                          uid=5_242 generic
+                            uid=5_243 spinbutton "年" value="0" valuemax="275760" valuemin="1" valuetext=""
+                              uid=5_244 StaticText " 年 "
+                                uid=5_6 InlineTextBox " 年 "
+                            uid=5_245 StaticText "/"
+                              uid=5_6 InlineTextBox "/"
+                            uid=5_246 spinbutton "月" value="0" valuemax="12" valuemin="1" valuetext=""
+                              uid=5_247 StaticText "月"
+                                uid=5_6 InlineTextBox "月"
+                            uid=5_248 StaticText "/"
+                              uid=5_6 InlineTextBox "/"
+                            uid=5_249 spinbutton "日" value="0" valuemax="31" valuemin="1" valuetext=""
+                              uid=5_250 StaticText "日"
+                                uid=5_6 InlineTextBox "日"
+                            uid=5_251 StaticText " "
+                              uid=5_6 InlineTextBox " "
+                            uid=5_252 spinbutton "小时" value="0" valuemax="23" valuemin="0" valuetext=""
+                              uid=5_253 StaticText "--"
+                                uid=5_6 InlineTextBox "--"
+                            uid=5_254 StaticText ":"
+                              uid=5_6 InlineTextBox ":"
+                            uid=5_255 spinbutton "分钟" value="0" valuemax="59" valuemin="0" valuetext=""
+                              uid=5_256 StaticText "--"
+                                uid=5_6 InlineTextBox "--"
+                        uid=5_257 button "显示当地日期和时间选择器" haspopup="menu"
+                  uid=5_258 cell "操作内容"
+                    uid=5_259 textbox "操作内容"
+                      uid=5_260 ignored
+                      uid=5_261 generic
+                  uid=5_262 cell "状态"
+                    uid=5_263 textbox "状态"
+                      uid=5_264 ignored
+                      uid=5_265 generic
+                  uid=5_266 cell
+            uid=5_267 button "+ 添加一行"
+              uid=5_268 generic
+                uid=5_269 ignored
+                  uid=5_6 StaticText "+"
+                    uid=5_6 InlineTextBox "+"
+              uid=5_270 StaticText " 添加一行"
+                uid=5_6 InlineTextBox " 添加一行"
+          uid=5_271 ignored
+            uid=5_272 heading "三、根本原因分析" level="2"
+              uid=5_273 StaticText "三、根本原因分析"
+                uid=5_6 InlineTextBox "三、根本原因分析"
+            uid=5_274 ignored
+              uid=5_275 LabelText
+                uid=5_276 StaticText "直接原因"
+                  uid=5_6 InlineTextBox "直接原因"
+              uid=5_277 textbox "直接原因" multiline
+                uid=5_278 ignored
+                uid=5_279 generic
+            uid=5_280 ignored
+              uid=5_281 LabelText
+                uid=5_282 StaticText "根本原因"
+                  uid=5_6 InlineTextBox "根本原因"
+              uid=5_283 textbox "根本原因" multiline
+                uid=5_284 ignored
+                uid=5_285 generic
+          uid=5_286 ignored
+            uid=5_287 heading "四、解决方案与预防措施" level="2"
+              uid=5_288 StaticText "四、解决方案与预防措施"
+                uid=5_6 InlineTextBox "四、解决方案与预防措施"
+            uid=5_289 ignored
+              uid=5_290 LabelText
+                uid=5_291 StaticText "短期解决"
+                  uid=5_6 InlineTextBox "短期解决"
+              uid=5_292 textbox "短期解决" multiline
+                uid=5_293 ignored
+                uid=5_294 generic
+            uid=5_295 ignored
+              uid=5_296 LabelText
+                uid=5_297 StaticText "长期预防"
+                  uid=5_6 InlineTextBox "长期预防"
+              uid=5_298 textbox "长期预防" multiline
+                uid=5_299 ignored
+                uid=5_300 generic
+          uid=5_301 ignored
+            uid=5_302 heading "五、附件" level="2"
+              uid=5_303 StaticText "五、附件"
+                uid=5_6 InlineTextBox "五、附件"
+            uid=5_304 ignored
+              uid=5_305 LabelText
+                uid=5_306 StaticText "附件清单"
+                  uid=5_6 InlineTextBox "附件清单"
+              uid=5_307 ignored
+                uid=5_308 ignored
+                  uid=5_309 checkbox "现场照片/截图"
+                  uid=5_310 ignored
+                    uid=5_311 ignored
+                uid=5_312 ignored
+                  uid=5_313 checkbox "其他"
+                  uid=5_314 ignored
+                    uid=5_315 ignored
+              uid=5_316 ignored
+              uid=5_317 ignored
+      uid=5_318 contentinfo
+        uid=5_319 button "生成工单"
+        uid=5_320 button "清空表单"
