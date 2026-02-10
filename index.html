@@ -421,6 +421,28 @@
                     <textarea id="longTermPrevention" name="longTermPrevention" placeholder="请描述长期预防措施"></textarea>
                 </div>
             </div>
+
+            <!-- Section 5: 附件 -->
+            <div class="form-section">
+                <h2>五、附件</h2>
+
+                <div class="form-group">
+                    <label>附件清单</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="attach1" name="attachments" value="现场照片/截图">
+                            <label for="attach1">现场照片/截图</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="attach2" name="attachments" value="其他" data-conditional="otherAttachInput">
+                            <label for="attach2">其他</label>
+                        </div>
+                    </div>
+                    <div class="conditional-field" id="otherAttachInput">
+                        <input type="text" id="otherAttachment" placeholder="请输入其他附件说明">
+                    </div>
+                </div>
+            </div>
         </form>
     </main>
 
