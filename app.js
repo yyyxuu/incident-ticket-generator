@@ -331,6 +331,184 @@
                formData.location.length > 0;
     }
 
+    // Add Section 1: Accident Details
+    function addSection1(doc, yPos) {
+        const marginLeft = 20;
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const maxWidth = pageWidth - 2 * marginLeft;
+
+        doc.setFontSize(14);
+        doc.setFont('helvetica', 'bold');
+        doc.text('一、事故详情', marginLeft, yPos);
+
+        yPos += 10;
+
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'normal');
+
+        // Accident types
+        const types = formData.accidentTypes.join('、');
+        if (formData.otherType) {
+            types += ` (${formData.otherType})`;
+        }
+        yPos = addWrappedText(doc, `事故类型: ${types}`, marginLeft, yPos, maxWidth);
+
+        // Times
+        yPos = addField(doc, '发生时间', formatDate(formData.occurTime), marginLeft, yPos);
+        yPos = addField(doc, '发现时间', formatDate(formData.discoverTime), marginLeft, yPos);
+
+        // Text fields
+        yPos = addField(doc, '发生地点/系统', formData.location, marginLeft, yPos);
+        yPos = addField(doc, '影响范围', formData.impact, marginLeft, yPos);
+
+        // Description (multiline)
+        yPos = addMultilineField(doc, '事故描述', formData.description, marginLeft, yPos, maxWidth);
+
+        return yPos + 10;
+    }
+
+    // Add Section 2: Processing Timeline
+    function addSection2(doc, yPos) {
+        const marginLeft = 20;
+
+        doc.setFontSize(14);
+        doc.setFont('helvetica', 'bold');
+        doc.text('二、处理过程', marginLeft, yPos);
+
+        yPos += 10;
+
+        // Prepare table data
+        const tableData = formData.processRows.map(row => [
+            formatDate(row.time),
+            row.action,
+            row.status
+        ]);
+
+        // Add table if there's data
+        if (tableData.length > 0 && tableData.some(row => row.some(cell => cell))) {
+            doc.autoTable({
+                startY: yPos,
+                head: [['时间', '操作内容', '状态更新']],
+                body: tableData,
+                theme: 'grid',
+                styles: { fontSize: 9, cellPadding: 2 },
+                headStyles: { fillColor: [102, 126, 234] },
+                alternateRowStyles: { fillColor: [245, 245, 245] },
+                margin: { left: 20, right: 20 }
+            });
+
+            yPos = doc.lastAutoTable.finalY + 10;
+        } else {
+            yPos += 10;
+        }
+
+        return yPos;
+    }
+
+    // Add Section 3: Root Cause Analysis
+    function addSection3(doc, yPos) {
+        const marginLeft = 20;
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const maxWidth = pageWidth - 2 * marginLeft;
+
+        doc.setFontSize(14);
+        doc.setFont('helvetica', 'bold');
+        doc.text('三、根本原因分析', marginLeft, yPos);
+
+        yPos += 10;
+
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'normal');
+
+        yPos = addMultilineField(doc, '直接原因', formData.directCause, marginLeft, yPos, maxWidth);
+        yPos = addMultilineField(doc, '根本原因', formData.rootCause, marginLeft, yPos, maxWidth);
+
+        return yPos + 10;
+    }
+
+    // Add Section 4: Solutions
+    function addSection4(doc, yPos) {
+        const marginLeft = 20;
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const maxWidth = pageWidth - 2 * marginLeft;
+
+        doc.setFontSize(14);
+        doc.setFont('helvetica', 'bold');
+        doc.text('四、解决方案与预防措施', marginLeft, yPos);
+
+        yPos += 10;
+
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'normal');
+
+        yPos = addMultilineField(doc, '短期解决', formData.shortTermSolution, marginLeft, yPos, maxWidth);
+        yPos = addMultilineField(doc, '长期预防', formData.longTermPrevention, marginLeft, yPos, maxWidth);
+
+        return yPos + 10;
+    }
+
+    // Add Section 5: Attachments
+    function addSection5(doc, yPos) {
+        const marginLeft = 20;
+
+        doc.setFontSize(14);
+        doc.setFont('helvetica', 'bold');
+        doc.text('五、附件', marginLeft, yPos);
+
+        yPos += 10;
+
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'normal');
+
+        const attachments = formData.attachments.join('、');
+        if (formData.otherAttachment) {
+            attachments += ` (${formData.otherAttachment})`;
+        }
+
+        if (attachments) {
+            doc.text(`附件清单: ${attachments}`, marginLeft, yPos);
+        } else {
+            doc.text('附件清单: 无', marginLeft, yPos);
+        }
+    }
+
+    // Helper: Add a single field
+    function addField(doc, label, value, x, y) {
+        doc.text(`${label}: ${value || '未填写'}`, x, y);
+        return y + 7;
+    }
+
+    // Helper: Add multiline field
+    function addMultilineField(doc, label, value, x, y, maxWidth) {
+        doc.setFont('helvetica', 'bold');
+        doc.text(`${label}:`, x, y);
+        y += 7;
+
+        doc.setFont('helvetica', 'normal');
+        if (value) {
+            const lines = doc.splitTextToSize(value, maxWidth);
+            lines.forEach(line => {
+                doc.text(line, x, y);
+                y += 5;
+            });
+        } else {
+            doc.text('未填写', x, y);
+            y += 5;
+        }
+
+        return y + 3;
+    }
+
+    // Helper: Add wrapped text
+    function addWrappedText(doc, text, x, y, maxWidth) {
+        const lines = doc.splitTextToSize(text, maxWidth);
+        lines.forEach(line => {
+            doc.text(line, x, y);
+            y += 5;
+        });
+        return y + 2;
+    }
+
     // Add table row
     function addTableRow() {
         const row = document.createElement('tr');
