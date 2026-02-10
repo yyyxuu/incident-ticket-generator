@@ -68,6 +68,33 @@
         if (imageFileInput) {
             imageFileInput.addEventListener('change', handleImageUpload);
         }
+
+        // Preview modal controls
+        const modal = document.getElementById('pdfPreviewModal');
+        const closeModalBtn = document.getElementById('closeModal');
+        const cancelBtn = document.getElementById('cancelPreview');
+        const confirmBtn = document.getElementById('confirmDownload');
+
+        // Close modal
+        closeModalBtn.addEventListener('click', hidePreviewModal);
+        cancelBtn.addEventListener('click', hidePreviewModal);
+
+        // Confirm download
+        confirmBtn.addEventListener('click', downloadPDF);
+
+        // Close modal when clicking outside
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                hidePreviewModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('show')) {
+                hidePreviewModal();
+            }
+        });
     }
 
     // Debounce function
@@ -295,7 +322,11 @@
         });
     }
 
-    // Generate PDF
+    // Store generated PDF data for download
+    let generatedPDF = null;
+    let previewPages = [];
+
+    // Generate PDF preview
     function generatePDF() {
         try {
             // Collect latest form data
@@ -307,7 +338,7 @@
                 return;
             }
 
-            showToast('正在生成PDF，请稍候...', 'success');
+            showToast('正在生成预览，请稍候...', 'success');
 
             // Create HTML content for PDF (main content and images page)
             const hasImages = formData.uploadedImages && formData.uploadedImages.length > 0;
@@ -317,6 +348,9 @@
             pdfContent.style.cssText = 'position: absolute; left: -9999px; top: 0; z-index: -1; width: 210mm; padding: 12px; font-family: "Microsoft YaHei", "SimHei", Arial, sans-serif; font-size: 12px; color: #333; background: white;';
 
             document.body.appendChild(pdfContent);
+
+            // Reset preview pages
+            previewPages = [];
 
             // Generate main content
             html2canvas(pdfContent, {
@@ -343,6 +377,13 @@
                 const imgData = canvas.toDataURL('image/jpeg', 1);
                 pdf.addImage(imgData, 'JPEG', margin, margin, imgWidth, imgHeight, undefined, 'SLOW');
 
+                // Store page preview
+                previewPages.push({
+                    imageData: imgData,
+                    pageNumber: 1,
+                    title: '事故工单'
+                });
+
                 // Remove main content element
                 document.body.removeChild(pdfContent);
 
@@ -357,10 +398,10 @@
 
                     const processImagePage = () => {
                         if (currentPage >= totalPages) {
-                            // All pages processed, save PDF
-                            const filename = `事故工单-${new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5)}.pdf`;
-                            pdf.save(filename);
-                            showToast('PDF生成成功！', 'success');
+                            // All pages processed, show preview
+                            generatedPDF = pdf;
+                            showPreviewModal();
+                            showToast('预览生成成功！', 'success');
                             return;
                         }
 
@@ -391,6 +432,13 @@
                             // Add images to new page
                             pdf.addImage(imagesImgData, 'JPEG', margin, margin, imgWidth, imagesImgHeight, undefined, 'SLOW');
 
+                            // Store page preview
+                            previewPages.push({
+                                imageData: imagesImgData,
+                                pageNumber: currentPage + 2,
+                                title: `图片附件 (${startIndex + 1}-${Math.min(endIndex, formData.uploadedImages.length)})`
+                            });
+
                             // Remove images content element
                             document.body.removeChild(imagesContent);
 
@@ -407,10 +455,10 @@
                     // Start processing image pages
                     processImagePage();
                 } else {
-                    // No images, save PDF directly
-                    const filename = `事故工单-${new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5)}.pdf`;
-                    pdf.save(filename);
-                    showToast('PDF生成成功！', 'success');
+                    // No images, show preview directly
+                    generatedPDF = pdf;
+                    showPreviewModal();
+                    showToast('预览生成成功！', 'success');
                 }
             }).catch(err => {
                 console.error('PDF generation error:', err);
@@ -758,6 +806,59 @@
                 showToast('图片已删除', 'success');
             });
         });
+    }
+
+    // Show preview modal
+    function showPreviewModal() {
+        const modal = document.getElementById('pdfPreviewModal');
+        const previewPagesContainer = document.getElementById('previewPages');
+
+        // Clear previous preview
+        previewPagesContainer.innerHTML = '';
+
+        // Add all preview pages
+        previewPages.forEach(page => {
+            const pageDiv = document.createElement('div');
+            pageDiv.className = 'preview-page';
+
+            const img = document.createElement('img');
+            img.src = page.imageData;
+            img.alt = page.title;
+
+            const pageNumber = document.createElement('div');
+            pageNumber.className = 'preview-page-number';
+            pageNumber.textContent = `${page.title} - 第 ${page.pageNumber} 页`;
+
+            pageDiv.appendChild(img);
+            pageDiv.appendChild(pageNumber);
+            previewPagesContainer.appendChild(pageDiv);
+        });
+
+        // Show modal
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    }
+
+    // Hide preview modal
+    function hidePreviewModal() {
+        const modal = document.getElementById('pdfPreviewModal');
+        modal.classList.remove('show');
+        document.body.style.overflow = ''; // Restore scrolling
+    }
+
+    // Download PDF
+    function downloadPDF() {
+        if (!generatedPDF) {
+            showToast('没有可下载的PDF', 'error');
+            return;
+        }
+
+        const filename = `事故工单-${new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5)}.pdf`;
+        generatedPDF.save(filename);
+        showToast('PDF下载成功！', 'success');
+
+        // Hide modal after download
+        hidePreviewModal();
     }
 
     // Initialize on DOM ready
