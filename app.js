@@ -147,8 +147,68 @@
 
     // Populate form with data
     function populateForm(data) {
-        // Will be implemented in next task
-        console.log('Populating form with data...');
+        // Accident types
+        document.querySelectorAll('input[name="accidentType"]').forEach(cb => {
+            cb.checked = data.accidentTypes.includes(cb.value);
+        });
+
+        // Other type
+        if (data.otherType) {
+            document.getElementById('otherType').value = data.otherType;
+        }
+
+        // Date/time fields
+        if (data.occurTime) document.getElementById('occurTime').value = data.occurTime;
+        if (data.discoverTime) document.getElementById('discoverTime').value = data.discoverTime;
+
+        // Text fields
+        if (data.location) document.getElementById('location').value = data.location;
+        if (data.impact) document.getElementById('impact').value = data.impact;
+        if (data.description) document.getElementById('description').value = data.description;
+
+        // Process table
+        if (data.processRows && data.processRows.length > 0) {
+            // Clear existing rows
+            processTableBody.innerHTML = '';
+
+            // Add minimum 5 rows
+            const totalRows = Math.max(5, data.processRows.length);
+            for (let i = 0; i < totalRows; i++) {
+                const rowData = data.processRows[i] || { time: '', action: '', status: '' };
+                const row = document.createElement('tr');
+
+                const deleteCell = i >= 5 ? `<td><button type="button" class="btn-icon delete-row"><i class="fas fa-times"></i></button></td>` : '<td></td>';
+
+                row.innerHTML = `
+                    <td><input type="datetime-local" name="processTime[]" value="${rowData.time}"></td>
+                    <td><input type="text" name="processAction[]" placeholder="操作内容" value="${rowData.action}"></td>
+                    <td><input type="text" name="processStatus[]" placeholder="状态" value="${rowData.status}"></td>
+                    ${deleteCell}
+                `;
+                processTableBody.appendChild(row);
+            }
+        }
+
+        // Root cause
+        if (data.directCause) document.getElementById('directCause').value = data.directCause;
+        if (data.rootCause) document.getElementById('rootCause').value = data.rootCause;
+
+        // Solutions
+        if (data.shortTermSolution) document.getElementById('shortTermSolution').value = data.shortTermSolution;
+        if (data.longTermPrevention) document.getElementById('longTermPrevention').value = data.longTermPrevention;
+
+        // Attachments
+        document.querySelectorAll('input[name="attachments"]').forEach(cb => {
+            cb.checked = data.attachments.includes(cb.value);
+        });
+
+        // Other attachment
+        if (data.otherAttachment) {
+            document.getElementById('otherAttachment').value = data.otherAttachment;
+        }
+
+        // Update conditional fields
+        updateConditionalFields();
     }
 
     // Clear form
