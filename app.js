@@ -1,6 +1,6 @@
 // Incident Ticket Generator - Main Application
 
-(function() {
+(function () {
     'use strict';
 
     // Form data object
@@ -270,46 +270,73 @@
                 return;
             }
 
-            // Create PDF document
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF({
-                orientation: 'portrait',
-                unit: 'mm',
-                format: 'a4'
+            showToast('正在生成PDF，请稍候...', 'success');
+
+            // Create HTML content for PDF and add to DOM temporarily
+            const pdfContent = createPDFContent();
+
+            // Position element at top of page so user can see it during generation
+            pdfContent.style.cssText = 'position: fixed; left: 0; top: 0; z-index: 10000; width: 210mm; padding: 20px; font-family: "Microsoft YaHei", "SimHei", Arial, sans-serif; font-size: 12px; color: #333; background: white;';
+
+            document.body.appendChild(pdfContent);
+
+            // Use html2canvas directly with optimized settings
+            html2canvas(pdfContent, {
+                scale: 2,          // 2x resolution for better clarity
+                backgroundColor: '#ffffff',  // White background reduces file size
+                useCORS: false,
+                logging: false,
+                allowTaint: true
+            }).then(canvas => {
+                console.log('Canvas生成成功，尺寸:', canvas.width, 'x', canvas.height);
+
+                // Get PDF instance
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4'
+                });
+
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+
+                console.log('PDF页面尺寸:', pdfWidth, 'x', pdfHeight, 'mm');
+
+                // Calculate image dimensions to fit in PDF
+                const margin = 10;
+                const imgWidth = pdfWidth - (margin * 2);
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+                console.log('图片在PDF中的尺寸:', imgWidth.toFixed(2), 'x', imgHeight.toFixed(2), 'mm');
+
+                // Use JPEG with 0.85 quality for optimal size/quality balance
+                // JPEG is more efficient than PNG for documents with text
+                const imgData = canvas.toDataURL('image/jpeg', 1);
+
+                // Add image to PDF with SLOW compression for smallest file size
+                // Compression options: 'NONE', 'FAST', 'MEDIUM', 'SLOW'
+                pdf.addImage(imgData, 'JPEG', margin, margin, imgWidth, imgHeight, undefined, 'SLOW');
+
+                // Save PDF
+                const filename = `事故工单-${new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5)}.pdf`;
+                pdf.save(filename);
+
+                console.log('PDF保存成功:', filename);
+                showToast('PDF生成成功！即将移除临时元素...', 'success');
+
+                // Remove the temporary element after a short delay
+                setTimeout(() => {
+                    document.body.removeChild(pdfContent);
+                }, 2000);
+            }).catch(err => {
+                console.error('PDF generation error:', err);
+                showToast('PDF生成失败: ' + err.message, 'error');
+                // Remove the temporary element on error too
+                if (document.body.contains(pdfContent)) {
+                    document.body.removeChild(pdfContent);
+                }
             });
-
-            // Add title
-            doc.setFontSize(18);
-            doc.setFont('helvetica', 'bold');
-            doc.text('Incident Ticket', doc.internal.pageSize.getWidth() / 2, 20, { align: 'center' });
-
-            // Add timestamp
-            doc.setFontSize(10);
-            doc.setFont('helvetica', 'normal');
-            doc.text(`Generated: ${new Date().toLocaleString('zh-CN')}`, doc.internal.pageSize.getWidth() / 2, 28, { align: 'center' });
-
-            let yPos = 40;
-
-            // Section 1: Accident Details
-            yPos = addSection1(doc, yPos);
-
-            // Section 2: Processing Timeline
-            yPos = addSection2(doc, yPos);
-
-            // Section 3: Root Cause
-            yPos = addSection3(doc, yPos);
-
-            // Section 4: Solutions
-            yPos = addSection4(doc, yPos);
-
-            // Section 5: Attachments
-            addSection5(doc, yPos);
-
-            // Save PDF
-            const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
-            doc.save(`事故工单-${timestamp}.pdf`);
-
-            showToast('PDF生成成功', 'success');
 
         } catch (error) {
             console.error('PDF generation error:', error);
@@ -317,199 +344,110 @@
         }
     }
 
+    // Create HTML content for PDF
+    function createPDFContent() {
+        const container = document.createElement('div');
+        // Keep element in viewport but nearly invisible
+        // Let content determine height naturally
+        container.style.cssText = 'position: absolute; left: 0; top: 0; opacity: 0.01; z-index: -1; padding: 20px; font-family: "Microsoft YaHei", "SimHei", Arial, sans-serif; font-size: 12px; color: #333; width: 210mm; background: white;';
+
+        // HTML escape function
+        const escapeHtml = (text) => {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        };
+
+        const types = escapeHtml(formData.accidentTypes.join('、')) + (formData.otherType ? ` (${escapeHtml(formData.otherType)})` : '');
+        const attachments = escapeHtml(formData.attachments.join('、')) + (formData.otherAttachment ? ` (${escapeHtml(formData.otherAttachment)})` : '');
+
+        // Build process table rows
+        const processRowsHTML = formData.processRows
+            .filter(row => row.time || row.action || row.status)
+            .map(row => `
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 8px;">${escapeHtml(formatDate(row.time))}</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">${escapeHtml(row.action || '')}</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">${escapeHtml(row.status || '')}</td>
+                </tr>
+            `).join('');
+
+        container.innerHTML = `
+            <div style="text-align: center; margin-bottom: 20px;">
+                <h1 style="font-size: 24px; margin-bottom: 10px; color: #333;">事故工单</h1>
+                <p style="font-size: 10px; color: #666;">生成时间: ${new Date().toLocaleString('zh-CN')}</p>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <h2 style="font-size: 16px; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 2px solid #667eea; color: #667eea;">一、事故详情</h2>
+                <p style="margin: 8px 0;"><strong>事故类型:</strong> ${types || '未填写'}</p>
+                <p style="margin: 8px 0;"><strong>发生时间:</strong> ${escapeHtml(formatDate(formData.occurTime)) || '未填写'}</p>
+                <p style="margin: 8px 0;"><strong>发现时间:</strong> ${escapeHtml(formatDate(formData.discoverTime)) || '未填写'}</p>
+                <p style="margin: 8px 0;"><strong>发生地点/系统:</strong> ${escapeHtml(formData.location) || '未填写'}</p>
+                <p style="margin: 8px 0;"><strong>影响范围:</strong> ${escapeHtml(formData.impact) || '未填写'}</p>
+                <div style="margin: 8px 0;">
+                    <p style="margin-bottom: 5px;"><strong>事故描述:</strong></p>
+                    <div style="padding: 10px; background: #f9f9f9; border-radius: 4px; min-height: 50px;">${escapeHtml(formData.description) || '未填写'}</div>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <h2 style="font-size: 16px; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 2px solid #667eea; color: #667eea;">二、处理过程</h2>
+                ${processRowsHTML ? `
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                        <thead>
+                            <tr style="background: #667eea; color: white;">
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">时间</th>
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">操作内容</th>
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">状态更新</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${processRowsHTML}
+                        </tbody>
+                    </table>
+                ` : '<p style="color: #999;">无处理记录</p>'}
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <h2 style="font-size: 16px; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 2px solid #667eea; color: #667eea;">三、根本原因分析</h2>
+                <div style="margin: 8px 0;">
+                    <p style="margin-bottom: 5px;"><strong>直接原因:</strong></p>
+                    <div style="padding: 10px; background: #f9f9f9; border-radius: 4px; min-height: 50px;">${escapeHtml(formData.directCause) || '未填写'}</div>
+                </div>
+                <div style="margin: 8px 0;">
+                    <p style="margin-bottom: 5px;"><strong>根本原因:</strong></p>
+                    <div style="padding: 10px; background: #f9f9f9; border-radius: 4px; min-height: 50px;">${escapeHtml(formData.rootCause) || '未填写'}</div>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <h2 style="font-size: 16px; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 2px solid #667eea; color: #667eea;">四、解决方案与预防措施</h2>
+                <div style="margin: 8px 0;">
+                    <p style="margin-bottom: 5px;"><strong>短期解决:</strong></p>
+                    <div style="padding: 10px; background: #f9f9f9; border-radius: 4px; min-height: 50px;">${escapeHtml(formData.shortTermSolution) || '未填写'}</div>
+                </div>
+                <div style="margin: 8px 0;">
+                    <p style="margin-bottom: 5px;"><strong>长期预防:</strong></p>
+                    <div style="padding: 10px; background: #f9f9f9; border-radius: 4px; min-height: 50px;">${escapeHtml(formData.longTermPrevention) || '未填写'}</div>
+                </div>
+            </div>
+
+            <div>
+                <h2 style="font-size: 16px; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 2px solid #667eea; color: #667eea;">五、附件</h2>
+                <p style="margin: 8px 0;"><strong>附件清单:</strong> ${attachments || '无'}</p>
+            </div>
+        `;
+
+        return container;
+    }
+
     // Validate form
     function validateForm() {
         // Require at least some data
         return formData.description.length > 0 ||
-               formData.accidentTypes.length > 0 ||
-               formData.location.length > 0;
-    }
-
-    // NOTE: jsPDF 2.5.1 Unicode Support
-    // Using default 'helvetica' font for Chinese characters
-    // jsPDF 2.5.1 has improved Unicode support through native ToUnicode support
-    // Testing confirmed Chinese characters render correctly without requiring additional fonts
-    // If future versions need better font support, consider:
-    // - Using 'Roboto' font with external font file
-    // - Implementing font loading with addFont() method
-    // - Using html2pdf plugin for better text rendering
-
-    // Add Section 1: Accident Details
-    function addSection1(doc, yPos) {
-        const marginLeft = 20;
-        const pageWidth = doc.internal.pageSize.getWidth();
-        const maxWidth = pageWidth - 2 * marginLeft;
-
-        doc.setFontSize(14);
-        doc.setFont('helvetica', 'bold');
-        doc.text('一、事故详情', marginLeft, yPos);
-
-        yPos += 10;
-
-        doc.setFontSize(10);
-        doc.setFont('helvetica', 'normal');
-
-        // Accident types
-        const types = formData.accidentTypes.join('、');
-        if (formData.otherType) {
-            types += ` (${formData.otherType})`;
-        }
-        yPos = addWrappedText(doc, `事故类型: ${types}`, marginLeft, yPos, maxWidth);
-
-        // Times
-        yPos = addField(doc, '发生时间', formatDate(formData.occurTime), marginLeft, yPos);
-        yPos = addField(doc, '发现时间', formatDate(formData.discoverTime), marginLeft, yPos);
-
-        // Text fields
-        yPos = addField(doc, '发生地点/系统', formData.location, marginLeft, yPos);
-        yPos = addField(doc, '影响范围', formData.impact, marginLeft, yPos);
-
-        // Description (multiline)
-        yPos = addMultilineField(doc, '事故描述', formData.description, marginLeft, yPos, maxWidth);
-
-        return yPos + 10;
-    }
-
-    // Add Section 2: Processing Timeline
-    function addSection2(doc, yPos) {
-        const marginLeft = 20;
-
-        doc.setFontSize(14);
-        doc.setFont('helvetica', 'bold');
-        doc.text('二、处理过程', marginLeft, yPos);
-
-        yPos += 10;
-
-        // Prepare table data
-        const tableData = formData.processRows.map(row => [
-            formatDate(row.time),
-            row.action,
-            row.status
-        ]);
-
-        // Add table if there's data
-        if (tableData.length > 0 && tableData.some(row => row.some(cell => cell))) {
-            doc.autoTable({
-                startY: yPos,
-                head: [['时间', '操作内容', '状态更新']],
-                body: tableData,
-                theme: 'grid',
-                styles: { fontSize: 9, cellPadding: 2 },
-                headStyles: { fillColor: [102, 126, 234] },
-                alternateRowStyles: { fillColor: [245, 245, 245] },
-                margin: { left: 20, right: 20 }
-            });
-
-            yPos = doc.lastAutoTable.finalY + 10;
-        } else {
-            yPos += 10;
-        }
-
-        return yPos;
-    }
-
-    // Add Section 3: Root Cause Analysis
-    function addSection3(doc, yPos) {
-        const marginLeft = 20;
-        const pageWidth = doc.internal.pageSize.getWidth();
-        const maxWidth = pageWidth - 2 * marginLeft;
-
-        doc.setFontSize(14);
-        doc.setFont('helvetica', 'bold');
-        doc.text('三、根本原因分析', marginLeft, yPos);
-
-        yPos += 10;
-
-        doc.setFontSize(10);
-        doc.setFont('helvetica', 'normal');
-
-        yPos = addMultilineField(doc, '直接原因', formData.directCause, marginLeft, yPos, maxWidth);
-        yPos = addMultilineField(doc, '根本原因', formData.rootCause, marginLeft, yPos, maxWidth);
-
-        return yPos + 10;
-    }
-
-    // Add Section 4: Solutions
-    function addSection4(doc, yPos) {
-        const marginLeft = 20;
-        const pageWidth = doc.internal.pageSize.getWidth();
-        const maxWidth = pageWidth - 2 * marginLeft;
-
-        doc.setFontSize(14);
-        doc.setFont('helvetica', 'bold');
-        doc.text('四、解决方案与预防措施', marginLeft, yPos);
-
-        yPos += 10;
-
-        doc.setFontSize(10);
-        doc.setFont('helvetica', 'normal');
-
-        yPos = addMultilineField(doc, '短期解决', formData.shortTermSolution, marginLeft, yPos, maxWidth);
-        yPos = addMultilineField(doc, '长期预防', formData.longTermPrevention, marginLeft, yPos, maxWidth);
-
-        return yPos + 10;
-    }
-
-    // Add Section 5: Attachments
-    function addSection5(doc, yPos) {
-        const marginLeft = 20;
-
-        doc.setFontSize(14);
-        doc.setFont('helvetica', 'bold');
-        doc.text('五、附件', marginLeft, yPos);
-
-        yPos += 10;
-
-        doc.setFontSize(10);
-        doc.setFont('helvetica', 'normal');
-
-        const attachments = formData.attachments.join('、');
-        if (formData.otherAttachment) {
-            attachments += ` (${formData.otherAttachment})`;
-        }
-
-        if (attachments) {
-            doc.text(`附件清单: ${attachments}`, marginLeft, yPos);
-        } else {
-            doc.text('附件清单: 无', marginLeft, yPos);
-        }
-    }
-
-    // Helper: Add a single field
-    function addField(doc, label, value, x, y) {
-        doc.text(`${label}: ${value || '未填写'}`, x, y);
-        return y + 7;
-    }
-
-    // Helper: Add multiline field
-    function addMultilineField(doc, label, value, x, y, maxWidth) {
-        doc.setFont('helvetica', 'bold');
-        doc.text(`${label}:`, x, y);
-        y += 7;
-
-        doc.setFont('helvetica', 'normal');
-        if (value) {
-            const lines = doc.splitTextToSize(value, maxWidth);
-            lines.forEach(line => {
-                doc.text(line, x, y);
-                y += 5;
-            });
-        } else {
-            doc.text('未填写', x, y);
-            y += 5;
-        }
-
-        return y + 3;
-    }
-
-    // Helper: Add wrapped text
-    function addWrappedText(doc, text, x, y, maxWidth) {
-        const lines = doc.splitTextToSize(text, maxWidth);
-        lines.forEach(line => {
-            doc.text(line, x, y);
-            y += 5;
-        });
-        return y + 2;
+            formData.accidentTypes.length > 0 ||
+            formData.location.length > 0;
     }
 
     // Add table row

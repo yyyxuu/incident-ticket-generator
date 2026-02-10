@@ -12,24 +12,10 @@
 
 ## 使用方法
 
-### 方式一: 直接打开（推荐）
-
 1. 双击打开 `index.html` 文件
 2. 填写事故工单信息
 3. 点击"生成PDF"按钮
 4. PDF文件将自动下载到您的下载文件夹
-
-### 方式二: 本地服务器
-
-```bash
-# 使用 Python
-python3 -m http.server 8000
-
-# 或使用 Node.js
-npx serve
-```
-
-然后在浏览器中访问 `http://localhost:8000`
 
 ## 工单内容
 
