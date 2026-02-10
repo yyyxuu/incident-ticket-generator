@@ -80,8 +80,51 @@
 
     // Collect form data into formData object
     function collectFormData() {
-        // Will be implemented in next task
-        console.log('Collecting form data...');
+        // Accident types
+        const typeCheckboxes = document.querySelectorAll('input[name="accidentType"]:checked');
+        formData.accidentTypes = Array.from(typeCheckboxes).map(cb => cb.value);
+
+        // Other type
+        const otherTypeCheckbox = document.getElementById('type5');
+        formData.otherType = otherTypeCheckbox.checked ? document.getElementById('otherType').value : '';
+
+        // Date/time fields
+        formData.occurTime = document.getElementById('occurTime').value || '';
+        formData.discoverTime = document.getElementById('discoverTime').value || '';
+
+        // Text fields
+        formData.location = document.getElementById('location').value || '';
+        formData.impact = document.getElementById('impact').value || '';
+        formData.description = document.getElementById('description').value || '';
+
+        // Process table rows
+        formData.processRows = [];
+        const rows = processTableBody.querySelectorAll('tr');
+        rows.forEach(row => {
+            const time = row.querySelector('input[name="processTime[]"]').value;
+            const action = row.querySelector('input[name="processAction[]"]').value;
+            const status = row.querySelector('input[name="processStatus[]"]').value;
+
+            if (time || action || status) {
+                formData.processRows.push({ time, action, status });
+            }
+        });
+
+        // Root cause
+        formData.directCause = document.getElementById('directCause').value || '';
+        formData.rootCause = document.getElementById('rootCause').value || '';
+
+        // Solutions
+        formData.shortTermSolution = document.getElementById('shortTermSolution').value || '';
+        formData.longTermPrevention = document.getElementById('longTermPrevention').value || '';
+
+        // Attachments
+        const attachCheckboxes = document.querySelectorAll('input[name="attachments"]:checked');
+        formData.attachments = Array.from(attachCheckboxes).map(cb => cb.value);
+
+        // Other attachment
+        const otherAttachCheckbox = document.getElementById('attach2');
+        formData.otherAttachment = otherAttachCheckbox.checked ? document.getElementById('otherAttachment').value : '';
     }
 
     // Save to localStorage
