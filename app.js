@@ -258,12 +258,6 @@
         });
     }
 
-    // Get checked values as string
-    function getCheckedValues(selector) {
-        const checked = document.querySelectorAll(`${selector}:checked`);
-        return Array.from(checked).map(cb => cb.value).join('、');
-    }
-
     // Generate PDF
     function generatePDF() {
         try {
