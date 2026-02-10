@@ -856,7 +856,17 @@
             return;
         }
 
-        const filename = `事故工单-${new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5)}.pdf`;
+        // 获取北京时间（UTC+8）
+        const now = new Date();
+        const beijingTime = new Date(now.getTime() + (8 * 60 * 60 * 1000));
+        const year = beijingTime.getUTCFullYear();
+        const month = String(beijingTime.getUTCMonth() + 1).padStart(2, '0');
+        const day = String(beijingTime.getUTCDate()).padStart(2, '0');
+        const hours = String(beijingTime.getUTCHours()).padStart(2, '0');
+        const minutes = String(beijingTime.getUTCMinutes()).padStart(2, '0');
+        const seconds = String(beijingTime.getUTCSeconds()).padStart(2, '0');
+
+        const filename = `事故工单-${year}-${month}-${day} ${hours}-${minutes}-${seconds}.pdf`;
         generatedPDF.save(filename);
         showToast('PDF下载成功！', 'success');
 
