@@ -339,6 +339,58 @@
                     <textarea id="description" name="description" placeholder="请详细描述事故情况"></textarea>
                 </div>
             </div>
+
+            <!-- Section 2: 处理过程 -->
+            <div class="form-section">
+                <h2>二、处理过程</h2>
+
+                <table id="processTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 25%">时间</th>
+                            <th style="width: 50%">操作内容</th>
+                            <th style="width: 15%">状态更新</th>
+                            <th style="width: 10%">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="processTableBody">
+                        <tr>
+                            <td><input type="datetime-local" name="processTime[]"></td>
+                            <td><input type="text" name="processAction[]" placeholder="操作内容"></td>
+                            <td><input type="text" name="processStatus[]" placeholder="状态"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><input type="datetime-local" name="processTime[]"></td>
+                            <td><input type="text" name="processAction[]" placeholder="操作内容"></td>
+                            <td><input type="text" name="processStatus[]" placeholder="状态"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><input type="datetime-local" name="processTime[]"></td>
+                            <td><input type="text" name="processAction[]" placeholder="操作内容"></td>
+                            <td><input type="text" name="processStatus[]" placeholder="状态"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><input type="datetime-local" name="processTime[]"></td>
+                            <td><input type="text" name="processAction[]" placeholder="操作内容"></td>
+                            <td><input type="text" name="processStatus[]" placeholder="状态"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><input type="datetime-local" name="processTime[]"></td>
+                            <td><input type="text" name="processAction[]" placeholder="操作内容"></td>
+                            <td><input type="text" name="processStatus[]" placeholder="状态"></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <button type="button" class="btn-add" id="addRowBtn">
+                    <i class="fas fa-plus"></i> 添加一行
+                </button>
+            </div>
         </form>
     </main>
 
