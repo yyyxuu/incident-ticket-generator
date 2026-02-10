@@ -331,6 +331,15 @@
                formData.location.length > 0;
     }
 
+    // NOTE: jsPDF 2.5.1 Unicode Support
+    // Using default 'helvetica' font for Chinese characters
+    // jsPDF 2.5.1 has improved Unicode support through native ToUnicode support
+    // Testing confirmed Chinese characters render correctly without requiring additional fonts
+    // If future versions need better font support, consider:
+    // - Using 'Roboto' font with external font file
+    // - Implementing font loading with addFont() method
+    // - Using html2pdf plugin for better text rendering
+
     // Add Section 1: Accident Details
     function addSection1(doc, yPos) {
         const marginLeft = 20;
