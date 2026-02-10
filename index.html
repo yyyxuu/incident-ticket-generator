@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>事故工单生成器</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <h1><i class="fas fa-file-alt"></i> 事故工单生成器</h1>
+        <p>填写事故信息，自动生成PDF工单</p>
+    </header>
+
+    <main>
+        <form id="incidentForm">
+            <!-- Form sections will be added in next tasks -->
+        </form>
+    </main>
+
+    <footer>
+        <button type="button" id="generateBtn" class="btn-primary">
+            <i class="fas fa-file-pdf"></i> 生成PDF
+        </button>
+        <button type="button" id="clearBtn" class="btn-secondary">
+            <i class="fas fa-trash"></i> 清空表单
+        </button>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
