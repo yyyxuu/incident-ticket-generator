@@ -128,7 +128,7 @@
 
         table th,
         table td {
-            padding: 0.75rem;
+            padding: 0.5rem;
             text-align: left;
             border: 1px solid #ddd;
         }
@@ -150,17 +150,20 @@
             background: #f9f9f9;
         }
 
-        .btn-icon {
-            background: none;
+        .btn-delete {
+            background: #dc3545;
+            color: white;
             border: none;
-            color: #dc3545;
+            border-radius: 4px;
             cursor: pointer;
-            padding: 0.25rem 0.5rem;
-            font-size: 1rem;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: background 0.2s;
         }
 
-        .btn-icon:hover {
-            color: #c82333;
+        .btn-delete:hover {
+            background: #c82333;
         }
 
         .btn-add {
@@ -250,6 +253,78 @@
                 transform: translateX(0);
                 opacity: 1;
             }
+        }
+
+        .image-preview-container {
+            margin-top: 1rem;
+        }
+
+        .image-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .image-preview-item {
+            position: relative;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+        }
+
+        .image-preview-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .image-preview-item .remove-image {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(220, 53, 69, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .image-preview-item .remove-image:hover {
+            background: rgba(200, 35, 51, 1);
+        }
+
+        .file-input-wrapper {
+            margin-top: 0.5rem;
+        }
+
+        #imageFileInput {
+            display: none;
+        }
+
+        .btn-upload {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .btn-upload:hover {
+            background: #5568d3;
         }
 
         @media (max-width: 768px) {
@@ -360,30 +435,6 @@
                             <td><input type="text" name="processStatus[]" placeholder="状态"></td>
                             <td></td>
                         </tr>
-                        <tr>
-                            <td><input type="datetime-local" name="processTime[]"></td>
-                            <td><input type="text" name="processAction[]" placeholder="操作内容"></td>
-                            <td><input type="text" name="processStatus[]" placeholder="状态"></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td><input type="datetime-local" name="processTime[]"></td>
-                            <td><input type="text" name="processAction[]" placeholder="操作内容"></td>
-                            <td><input type="text" name="processStatus[]" placeholder="状态"></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td><input type="datetime-local" name="processTime[]"></td>
-                            <td><input type="text" name="processAction[]" placeholder="操作内容"></td>
-                            <td><input type="text" name="processStatus[]" placeholder="状态"></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td><input type="datetime-local" name="processTime[]"></td>
-                            <td><input type="text" name="processAction[]" placeholder="操作内容"></td>
-                            <td><input type="text" name="processStatus[]" placeholder="状态"></td>
-                            <td></td>
-                        </tr>
                     </tbody>
                 </table>
 
@@ -430,7 +481,7 @@
                     <label>附件清单</label>
                     <div class="checkbox-group">
                         <div class="checkbox-item">
-                            <input type="checkbox" id="attach1" name="attachments" value="现场照片/截图">
+                            <input type="checkbox" id="attach1" name="attachments" value="现场照片/截图" data-conditional="imageUploadSection">
                             <label for="attach1">现场照片/截图</label>
                         </div>
                         <div class="checkbox-item">
@@ -441,22 +492,35 @@
                     <div class="conditional-field" id="otherAttachInput">
                         <input type="text" id="otherAttachment" placeholder="请输入其他附件说明">
                     </div>
+                    <div class="conditional-field" id="imageUploadSection">
+                        <div class="file-input-wrapper">
+                            <input type="file" id="imageFileInput" accept="image/*" multiple>
+                            <button type="button" class="btn-upload" onclick="document.getElementById('imageFileInput').click()">
+                                <i class="fas fa-upload"></i> 选择图片
+                            </button>
+                            <small style="display: block; margin-top: 5px; color: #666; font-size: 0.85rem;">支持的格式：JPG, PNG, GIF, WebP, HEIC（HEIC将自动转换为JPG）</small>
+                        </div>
+                        <div class="image-preview-container">
+                            <div class="image-preview-grid" id="imagePreviewGrid"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </form>
     </main>
 
     <footer>
-        <button type="button" id="generateBtn" class="btn-primary">
-            <i class="fas fa-file-pdf"></i> 生成PDF工单
-        </button>
         <button type="button" id="clearBtn" class="btn-secondary">
             <i class="fas fa-trash-alt"></i> 清空表单
+        </button>
+        <button type="button" id="generateBtn" class="btn-primary">
+            <i class="fas fa-file-pdf"></i> 生成PDF工单
         </button>
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
