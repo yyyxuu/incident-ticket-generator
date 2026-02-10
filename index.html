@@ -281,6 +281,64 @@
 
     <main>
         <form id="incidentForm">
+            <!-- Section 1: 事故详情 -->
+            <div class="form-section">
+                <h2>一、事故详情</h2>
+
+                <div class="form-group">
+                    <label>事故类型</label>
+                    <div class="checkbox-group" id="accidentTypeGroup">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="type1" name="accidentType" value="系统故障">
+                            <label for="type1">系统故障</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="type2" name="accidentType" value="网络中断">
+                            <label for="type2">网络中断</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="type3" name="accidentType" value="安全事件">
+                            <label for="type3">安全事件</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="type4" name="accidentType" value="设备损坏">
+                            <label for="type4">设备损坏</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="type5" name="accidentType" value="其他" data-conditional="otherTypeInput">
+                            <label for="type5">其他</label>
+                        </div>
+                    </div>
+                    <div class="conditional-field" id="otherTypeInput">
+                        <input type="text" id="otherType" placeholder="请输入其他事故类型">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="occurTime">发生时间</label>
+                    <input type="datetime-local" id="occurTime" name="occurTime">
+                </div>
+
+                <div class="form-group">
+                    <label for="discoverTime">发现时间</label>
+                    <input type="datetime-local" id="discoverTime" name="discoverTime">
+                </div>
+
+                <div class="form-group">
+                    <label for="location">发生地点/系统</label>
+                    <input type="text" id="location" name="location" placeholder="请输入发生地点或系统名称">
+                </div>
+
+                <div class="form-group">
+                    <label for="impact">影响范围</label>
+                    <input type="text" id="impact" name="impact" placeholder="请输入影响范围">
+                </div>
+
+                <div class="form-group">
+                    <label for="description">事故描述</label>
+                    <textarea id="description" name="description" placeholder="请详细描述事故情况"></textarea>
+                </div>
+            </div>
         </form>
     </main>
 
