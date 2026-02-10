@@ -245,10 +245,90 @@
         };
     }
 
+    // Format date for display
+    function formatDate(dateString) {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        return date.toLocaleString('zh-CN', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+
+    // Get checked values as string
+    function getCheckedValues(selector) {
+        const checked = document.querySelectorAll(`${selector}:checked`);
+        return Array.from(checked).map(cb => cb.value).join('、');
+    }
+
     // Generate PDF
     function generatePDF() {
-        console.log('Generating PDF...');
-        showToast('PDF生成功能开发中...', 'error');
+        try {
+            // Collect latest form data
+            collectFormData();
+
+            // Validate required fields
+            if (!validateForm()) {
+                showToast('请填写必填字段', 'error');
+                return;
+            }
+
+            // Create PDF document
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({
+                orientation: 'portrait',
+                unit: 'mm',
+                format: 'a4'
+            });
+
+            // Add title
+            doc.setFontSize(18);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Incident Ticket', doc.internal.pageSize.getWidth() / 2, 20, { align: 'center' });
+
+            // Add timestamp
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
+            doc.text(`Generated: ${new Date().toLocaleString('zh-CN')}`, doc.internal.pageSize.getWidth() / 2, 28, { align: 'center' });
+
+            let yPos = 40;
+
+            // Section 1: Accident Details
+            yPos = addSection1(doc, yPos);
+
+            // Section 2: Processing Timeline
+            yPos = addSection2(doc, yPos);
+
+            // Section 3: Root Cause
+            yPos = addSection3(doc, yPos);
+
+            // Section 4: Solutions
+            yPos = addSection4(doc, yPos);
+
+            // Section 5: Attachments
+            addSection5(doc, yPos);
+
+            // Save PDF
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+            doc.save(`事故工单-${timestamp}.pdf`);
+
+            showToast('PDF生成成功', 'success');
+
+        } catch (error) {
+            console.error('PDF generation error:', error);
+            showToast('PDF生成失败: ' + error.message, 'error');
+        }
+    }
+
+    // Validate form
+    function validateForm() {
+        // Require at least some data
+        return formData.description.length > 0 ||
+               formData.accidentTypes.length > 0 ||
+               formData.location.length > 0;
     }
 
     // Add table row
