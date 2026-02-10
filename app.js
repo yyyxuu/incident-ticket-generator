@@ -30,7 +30,6 @@
 
     // Initialize application
     function init() {
-        console.log('Incident Ticket Generator initialized');
         loadFromLocalStorage();
         setupEventListeners();
         updateConditionalFields();
@@ -288,8 +287,6 @@
                 logging: false,
                 allowTaint: true
             }).then(canvas => {
-                console.log('Canvas生成成功，尺寸:', canvas.width, 'x', canvas.height);
-
                 // Get PDF instance
                 const { jsPDF } = window.jspdf;
                 const pdf = new jsPDF({
@@ -301,14 +298,10 @@
                 const pdfWidth = pdf.internal.pageSize.getWidth();
                 const pdfHeight = pdf.internal.pageSize.getHeight();
 
-                console.log('PDF页面尺寸:', pdfWidth, 'x', pdfHeight, 'mm');
-
                 // Calculate image dimensions to fit in PDF
                 const margin = 10;
                 const imgWidth = pdfWidth - (margin * 2);
                 const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-                console.log('图片在PDF中的尺寸:', imgWidth.toFixed(2), 'x', imgHeight.toFixed(2), 'mm');
 
                 // Use JPEG with 0.85 quality for optimal size/quality balance
                 // JPEG is more efficient than PNG for documents with text
@@ -322,7 +315,6 @@
                 const filename = `事故工单-${new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5)}.pdf`;
                 pdf.save(filename);
 
-                console.log('PDF保存成功:', filename);
                 showToast('PDF生成成功！即将移除临时元素...', 'success');
 
                 // Remove the temporary element after a short delay
