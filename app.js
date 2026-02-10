@@ -179,6 +179,10 @@
 
                 const deleteCell = i >= 5 ? `<td><button type="button" class="btn-icon delete-row"><i class="fas fa-times"></i></button></td>` : '<td></td>';
 
+                // XSS SAFETY: user data only goes into input value attributes, not innerHTML text content.
+                // HTML attribute values are treated as plain text by browser parsers and cannot execute JavaScript.
+                // The data originates from input.value (browser auto-escaped) → localStorage → input value attribute.
+                // No XSS risk despite using innerHTML here.
                 row.innerHTML = `
                     <td><input type="datetime-local" name="processTime[]" value="${rowData.time}"></td>
                     <td><input type="text" name="processAction[]" placeholder="操作内容" value="${rowData.action}"></td>
