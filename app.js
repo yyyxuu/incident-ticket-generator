@@ -18,7 +18,7 @@
         shortTermSolution: '',
         longTermPrevention: '',
         attachments: [],
-        otherAttachment: '',
+        attachmentNote: '',
         uploadedImages: []  // Store uploaded images as base64
     };
 
@@ -160,9 +160,8 @@
         const attachCheckboxes = document.querySelectorAll('input[name="attachments"]:checked');
         formData.attachments = Array.from(attachCheckboxes).map(cb => cb.value);
 
-        // Other attachment
-        const otherAttachCheckbox = document.getElementById('attach2');
-        formData.otherAttachment = otherAttachCheckbox.checked ? document.getElementById('otherAttachment').value : '';
+        // Attachment note
+        formData.attachmentNote = document.getElementById('attachmentNote').value || '';
     }
 
     // Save to localStorage
@@ -256,9 +255,9 @@
             cb.checked = data.attachments.includes(cb.value);
         });
 
-        // Other attachment
-        if (data.otherAttachment) {
-            document.getElementById('otherAttachment').value = data.otherAttachment;
+        // Attachment note
+        if (data.attachmentNote) {
+            document.getElementById('attachmentNote').value = data.attachmentNote;
         }
 
         // Uploaded images
@@ -304,7 +303,7 @@
             shortTermSolution: '',
             longTermPrevention: '',
             attachments: [],
-            otherAttachment: '',
+            attachmentNote: '',
             uploadedImages: []
         };
     }
@@ -614,6 +613,10 @@
                 ${formData.uploadedImages && formData.uploadedImages.length > 0 ? `
                     <p style="margin-top: 10px; color: #667eea; font-weight: 600;">图片附件共${formData.uploadedImages.length}张，见后续页面</p>
                 ` : ''}
+                <div style="margin: 6px 0;">
+                    <p style="margin-bottom: 4px;"><strong>备注:</strong></p>
+                    <div style="padding: 8px; background: #f9f9f9; border-radius: 4px; min-height: 50px;">${escapeHtmlWithBreaks(formData.attachmentNote) || '无'}</div>
+                </div>
             </div>
         `;
 
